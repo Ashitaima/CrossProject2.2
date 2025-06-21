@@ -11,7 +11,7 @@ import ua.edu.chnu.springjpaproject.user.User;
 import ua.edu.chnu.springjpaproject.user.UserRole;
 
 @Controller
-public class UserController {
+public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
@@ -34,6 +34,7 @@ public class UserController {
             return "redirect:/login";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Помилка при реєстрації: " + e.getMessage());
+            addCurrentUserToModel(model);
             return "register";
         }
     }

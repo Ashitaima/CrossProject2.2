@@ -1,7 +1,10 @@
 @import ua.edu.chnu.springjpaproject.user.UserRole
 @param String errorMessage = null
+@param String currentUser = null
 
-@template.layout(content = @`
+@template.layout(
+currentUser = currentUser,
+content = @`
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">

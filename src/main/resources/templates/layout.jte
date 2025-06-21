@@ -1,6 +1,7 @@
 @import gg.jte.Content
 @param String title = "Library Management System"
 @param gg.jte.Content content
+@param String currentUser = null
 
 <!DOCTYPE html>
 <html lang="uk">
@@ -69,9 +70,21 @@
             <i class="fas fa-book me-2"></i>
             Library Management System
         </a>
-        <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Main</a>
-            <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Registration</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Головна</a>
+
+                @if(currentUser != null)
+                    <span class="nav-link" style="color: white;"><i class="fas fa-user me-1"></i>Вітаємо, ${currentUser}!</span>
+                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt me-1"></i>Вихід</a>
+                @else
+                    <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i>Вхід</a>
+                    <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Реєстрація</a>
+                @endif
+            </div>
         </div>
     </div>
 </nav>

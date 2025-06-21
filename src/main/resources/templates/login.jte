@@ -4,9 +4,11 @@
 @param Map<String, String> errors = Map.of()
 @param String error = null
 @param String logout = null
+@param String currentUser = null
 
 @template.layout(
 title = "Вхід до системи",
+currentUser = currentUser,
 content = @`
 <div class="container mt-5">
     <div class="row justify-content-center">

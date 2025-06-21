@@ -1,7 +1,9 @@
 @param String title = "Main Page - Library Management System"
+@param String currentUser = null
 
 @template.layout(
 title = title,
+currentUser = currentUser,
 content = @`
     <div class="card" style="width: 100%; max-width: 800px;">
         <div class="card-body p-5">
@@ -11,21 +13,7 @@ content = @`
             </div>
 
             <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card h-100 border-0" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white;">
-                        <div class="card-body text-center p-4">
-                            <i class="fas fa-user-plus fa-3x mb-3"></i>
-                            <h5 class="card-title">Registration</h5>
-                            <p class="card-text">Create a new account for using LMS </p>
-                            <a href="/register" class="btn btn-light btn-lg">
-                                <i class="fas fa-user-plus me-2"></i>
-                                Register
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="card h-100 border-0" style="background: linear-gradient(45deg, #764ba2, #667eea); color: white;">
                         <div class="card-body text-center p-4">
                             <i class="fas fa-books fa-3x mb-3"></i>
@@ -46,7 +34,7 @@ content = @`
                         <div class="card-body p-4">
                             <h5 class="card-title">
                                 <i class="fas fa-info-circle me-2"></i>
-                                Про систему
+                                About The System
                             </h5>
                             <p class="card-text">
                                 This is a library management system training project developed using:

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-public class MainController {
+public class MainController extends BaseController {
 
     /**
      * Головна сторінка
@@ -18,6 +18,7 @@ public class MainController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("title", "Головна сторінка");
+        addCurrentUserToModel(model);
         return "index";  // повертає templates/index.jte
     }
 
@@ -28,6 +29,7 @@ public class MainController {
     public String register(Model model) {
         model.addAttribute("user", new ua.edu.chnu.springjpaproject.user.dto.UserRegistrationDto());
         model.addAttribute("errors", new java.util.HashMap<String, String>());
+        addCurrentUserToModel(model);
         return "register";
     }
 
@@ -48,6 +50,7 @@ public class MainController {
             model.addAttribute("logout", "true");
         }
 
+        addCurrentUserToModel(model);
         return "login";
     }
 }
