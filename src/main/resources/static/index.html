@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #444;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .search-box {
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        #result {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .error {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📚 Library Management System API Tester</h1>
+
+    <div class="section">
+        <h2>📖 Books</h2>
+        <div class="buttons">
+            <button onclick="loadData('/api/books', 'All Books')">All Books</button>
+            <button onclick="loadData('/api/books/with-details', 'Books with Details')">Books with Details</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="bookSearch" placeholder="Search by title..." />
+            <button onclick="searchBooks()">Search Books</button>
+
+            <input type="number" id="yearSearch" placeholder="Year..." />
+            <button onclick="searchByYear()">Search by Year</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>👨‍💼 Authors</h2>
+        <div class="buttons">
+            <button onclick="loadData('/api/authors', 'All Authors')">All Authors</button>
+            <button onclick="loadData('/api/authors/with-books', 'Authors with Books')">Authors with Books</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="authorSearch" placeholder="Search by last name..." />
+            <button onclick="searchAuthors()">Search Authors</button>
+
+            <input type="text" id="nationalitySearch" placeholder="Nationality..." />
+            <button onclick="searchByNationality()">Search by Nationality</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📂 Categories</h2>
+        <div class="buttons">
+            <button onclick="loadData('/api/categories', 'All Categories')">All Categories</button>
+            <button onclick="loadData('/api/categories/ordered-by-books', 'Categories by Book Count')">By Book Count</button>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="categorySearch" placeholder="Search category..." />
+            <button onclick="searchCategories()">Search Categories</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔍 Advanced Search</h2>
+        <div class="search-box">
+            <input type="text" id="globalSearch" placeholder="Search anything..." />
+            <button onclick="globalSearch()">Global Search</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2>📊 Results</h2>
+    <div id="result">Click any button above to see API results...</div>
+</div>
+
+<script>
+    const resultDiv = document.getElementById('result');
+
+    async function loadData(endpoint, title) {
+        try {
+            showLoading(title);
+            const response = await fetch(`http://localhost:8080${endpoint}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            showResult(title, data);
+        } catch (error) {
+            showError(title, error.message);
+        }
+    }
+
+    async function searchBooks() {
+        const query = document.getElementById('bookSearch').value.trim();
+        if (!query) {
+            alert('Please enter a search term');
+            return;
+        }
+        await loadData(`/api/books/search?title=${encodeURIComponent(query)}`, `Books containing "${query}"`);
+    }
+
+    async function searchByYear() {
+        const year = document.getElementById('yearSearch').value.trim();
+        if (!year) {
+            alert('Please enter a year');
+            return;
+        }
+        await loadData(`/api/books/year/${year}`, `Books from ${year}`);
+    }
+
+    async function searchAuthors() {
+        const query = document.getElementById('authorSearch').value.trim();
+        if (!query) {
+            alert('Please enter a last name');
+            return;
+        }
+        await loadData(`/api/authors/search?lastName=${encodeURIComponent(query)}`, `Authors with last name "${query}"`);
+    }
+
+    async function searchByNationality() {
+        const nationality = document.getElementById('nationalitySearch').value.trim();
+        if (!nationality) {
+            alert('Please enter a nationality');
+            return;
+        }
+        await loadData(`/api/authors/nationality/${encodeURIComponent(nationality)}`, `Authors from ${nationality}`);
+    }
+
+    async function searchCategories() {
+        const query = document.getElementById('categorySearch').value.trim();
+        if (!query) {
+            alert('Please enter a category name');
+            return;
+        }
+        await loadData(`/api/categories/search?name=${encodeURIComponent(query)}`, `Categories containing "${query}"`);
+    }
+
+    async function globalSearch() {
+        const query = document.getElementById('globalSearch').value.trim();
+        if (!query) {
+            alert('Please enter a search term');
+            return;
+        }
+        await loadData(`/api/books/search-all?q=${encodeURIComponent(query)}`, `Global search for "${query}"`);
+    }
+
+    function showLoading(title) {
+        resultDiv.className = '';
+        resultDiv.textContent = `Loading ${title}...`;
+    }
+
+    function showResult(title, data) {
+        resultDiv.className = 'success';
+        const count = Array.isArray(data) ? data.length : 1;
+        resultDiv.textContent = `${title} (${count} results):\n\n${JSON.stringify(data, null, 2)}`;
+    }
+
+    function showError(title, error) {
+        resultDiv.className = 'error';
+        resultDiv.textContent = `Error loading ${title}:\n${error}`;
+    }
+
+    // Load initial data
+    loadData('/api/books/with-details', 'Books with Details');
+</script>
+</body>
+</html>
