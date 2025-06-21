@@ -37,53 +37,53 @@ public class BookWebController {
         this.categoryService = categoryService;
     }
 
-    // Сторінка зі списком книг
+    // Books list page
     @GetMapping
     public String listBooks(Model model) {
         try {
-            logger.info("Отримання списку всіх книг");
+            logger.info("Getting list of all books");
             List<Book> books = bookService.getAllBooks();
             model.addAttribute("books", books != null ? books : new ArrayList<>());
             return "books";
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Помилка при отриманні списку книг", e);
+            logger.log(Level.SEVERE, "Error getting list of books", e);
             model.addAttribute("books", new ArrayList<>());
-            model.addAttribute("errorMessage", "Виникла помилка при завантаженні книг: " + e.getMessage());
+            model.addAttribute("errorMessage", "Error loading books: " + e.getMessage());
             return "books";
         }
     }
 
-    // Сторінка додавання нової книги
+    // Add new book page
     @GetMapping("/add")
     public String showAddBookForm(Model model) {
         try {
-            logger.info("Відображення форми додавання книги");
+            logger.info("Displaying add book form");
 
-            // Отримання списку авторів
-            logger.info("Отримання списку авторів");
+            // Get list of authors
+            logger.info("Getting list of authors");
             List<Author> authors = authorService.getAllAuthors();
-            logger.info("Отримано авторів: " + (authors != null ? authors.size() : 0));
+            logger.info("Authors received: " + (authors != null ? authors.size() : 0));
 
-            // Отримання списку категорій
-            logger.info("Отримання списку категорій");
+            // Get list of categories
+            logger.info("Getting list of categories");
             List<Category> categories = categoryService.getAllCategories();
-            logger.info("Отримано категорій: " + (categories != null ? categories.size() : 0));
+            logger.info("Categories received: " + (categories != null ? categories.size() : 0));
 
-            // Додавання списків до моделі
+            // Add lists to model
             model.addAttribute("authors", authors != null ? authors : new ArrayList<>());
             model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
 
             return "book-add";
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Помилка при відображенні форми додавання книги", e);
-            model.addAttribute("errorMessage", "Виникла помилка: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error displaying add book form", e);
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
             model.addAttribute("authors", new ArrayList<>());
             model.addAttribute("categories", new ArrayList<>());
             return "book-add";
         }
     }
 
-    // Обробка форми додавання нової книги
+    // Add new book form submission
     @PostMapping("/add")
     public String addBook(@RequestParam("title") String title,
                           @RequestParam("isbn") String isbn,
@@ -96,23 +96,23 @@ public class BookWebController {
                           RedirectAttributes redirectAttributes) {
 
         try {
-            logger.info("Додавання нової книги: " + title);
+            logger.info("Adding new book: " + title);
 
-            // Отримуємо автора
-            logger.info("Отримання автора з ID: " + authorId);
+            // Get author
+            logger.info("Getting author with ID: " + authorId);
             Optional<Author> author = authorService.getAuthorById(authorId);
             if (author.isEmpty()) {
-                throw new RuntimeException("Автор з ID " + authorId + " не знайдений");
+                throw new RuntimeException("Author with ID " + authorId + " not found");
             }
 
-            // Отримуємо категорію
-            logger.info("Отримання категорії з ID: " + categoryId);
+            // Get category
+            logger.info("Getting category with ID: " + categoryId);
             Optional<Category> category = categoryService.getCategoryById(categoryId);
             if (category.isEmpty()) {
-                throw new RuntimeException("Категорія з ID " + categoryId + " не знайдена");
+                throw new RuntimeException("Category with ID " + categoryId + " not found");
             }
 
-            // Створюємо нову книгу
+            // Create new book
             Book book = new Book();
             book.setTitle(title);
             book.setIsbn(isbn != null && !isbn.trim().isEmpty() ? isbn : null);
@@ -122,20 +122,20 @@ public class BookWebController {
             book.setCategory(category.get());
             book.setDescription(description != null && !description.trim().isEmpty() ? description : null);
 
-            // Зберігаємо книгу в базі даних
-            logger.info("Збереження книги в базі даних");
+            // Save book to database
+            logger.info("Saving book to database");
             bookService.saveBook(book);
 
-            // Додаємо повідомлення про успіх
+            // Add success message
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Книга \"" + title + "\" успішно додана!");
+                    "Book \"" + title + "\" successfully added!");
 
             return "redirect:/books";
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Помилка при додаванні книги", e);
+            logger.log(Level.SEVERE, "Error adding book", e);
 
-            // У випадку помилки повертаємося на форму з повідомленням про помилку
+            // In case of error, return to form with error message
             try {
                 List<Author> authors = authorService.getAllAuthors();
                 List<Category> categories = categoryService.getAllCategories();
@@ -143,48 +143,48 @@ public class BookWebController {
                 model.addAttribute("authors", authors != null ? authors : new ArrayList<>());
                 model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Помилка при отриманні авторів та категорій", ex);
+                logger.log(Level.SEVERE, "Error getting authors and categories", ex);
                 model.addAttribute("authors", new ArrayList<>());
                 model.addAttribute("categories", new ArrayList<>());
             }
 
-            model.addAttribute("errorMessage", "Помилка: " + e.getMessage());
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
             return "book-add";
         }
     }
 
-    // Сторінка перегляду деталей книги
+    // View book details page
     @GetMapping("/view/{id}")
     public String viewBook(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         try {
-            logger.info("Перегляд деталей книги з ID: " + id);
+            logger.info("Viewing details of book with ID: " + id);
 
             Optional<Book> bookOpt = bookService.getBookById(id);
             if (bookOpt.isEmpty()) {
-                logger.warning("Книга з ID " + id + " не знайдена");
-                redirectAttributes.addFlashAttribute("errorMessage", "Книга з ID " + id + " не знайдена");
+                logger.warning("Book with ID " + id + " not found");
+                redirectAttributes.addFlashAttribute("errorMessage", "Book with ID " + id + " not found");
                 return "redirect:/books";
             }
 
             model.addAttribute("book", bookOpt.get());
             return "book-view";
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Помилка при перегляді деталей книги", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "Помилка при перегляді деталей книги: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error viewing book details", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Error viewing book details: " + e.getMessage());
             return "redirect:/books";
         }
     }
 
-    // Сторінка редагування книги
+    // Edit book page
     @GetMapping("/edit/{id}")
     public String showEditBookForm(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         try {
-            logger.info("Відображення форми редагування книги з ID: " + id);
+            logger.info("Displaying edit form for book with ID: " + id);
 
             Optional<Book> bookOpt = bookService.getBookById(id);
             if (bookOpt.isEmpty()) {
-                logger.warning("Книга з ID " + id + " не знайдена");
-                redirectAttributes.addFlashAttribute("errorMessage", "Книга з ID " + id + " не знайдена");
+                logger.warning("Book with ID " + id + " not found");
+                redirectAttributes.addFlashAttribute("errorMessage", "Book with ID " + id + " not found");
                 return "redirect:/books";
             }
 
@@ -197,13 +197,13 @@ public class BookWebController {
 
             return "book-edit";
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Помилка при відображенні форми редагування книги", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "Помилка при відображенні форми редагування книги: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error displaying edit form for book", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Error displaying edit form for book: " + e.getMessage());
             return "redirect:/books";
         }
     }
 
-    // Обробка форми редагування книги
+    // Edit book form submission
     @PostMapping("/edit/{id}")
     public String updateBook(@PathVariable("id") Long id,
                             @RequestParam("title") String title,
@@ -216,30 +216,30 @@ public class BookWebController {
                             Model model,
                             RedirectAttributes redirectAttributes) {
         try {
-            logger.info("Оновлення книги з ID: " + id);
+            logger.info("Updating book with ID: " + id);
 
-            // Перевіряємо, чи існує книга
+            // Check if book exists
             Optional<Book> bookOpt = bookService.getBookById(id);
             if (bookOpt.isEmpty()) {
-                logger.warning("Книга з ID " + id + " не знайдена");
-                redirectAttributes.addFlashAttribute("errorMessage", "Книга з ID " + id + " не знайдена");
+                logger.warning("Book with ID " + id + " not found");
+                redirectAttributes.addFlashAttribute("errorMessage", "Book with ID " + id + " not found");
                 return "redirect:/books";
             }
 
             Book book = bookOpt.get();
 
-            // Отримуємо автора та категорію
+            // Get author and category
             Optional<Author> author = authorService.getAuthorById(authorId);
             if (author.isEmpty()) {
-                throw new RuntimeException("Автор з ID " + authorId + " не знайдений");
+                throw new RuntimeException("Author with ID " + authorId + " not found");
             }
 
             Optional<Category> category = categoryService.getCategoryById(categoryId);
             if (category.isEmpty()) {
-                throw new RuntimeException("Категорія з ID " + categoryId + " не знайдена");
+                throw new RuntimeException("Category with ID " + categoryId + " not found");
             }
 
-            // Оновлюємо дані книги
+            // Update book details
             book.setTitle(title);
             book.setIsbn(isbn != null && !isbn.trim().isEmpty() ? isbn : null);
             book.setPublicationYear(publicationYear);
@@ -248,16 +248,16 @@ public class BookWebController {
             book.setCategory(category.get());
             book.setDescription(description != null && !description.trim().isEmpty() ? description : null);
 
-            // Зберігаємо оновлену книгу
+            // Save updated book
             bookService.updateBook(book);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Книгу \"" + title + "\" успішно оновлено");
+            redirectAttributes.addFlashAttribute("successMessage", "Book \"" + title + "\" successfully updated");
             return "redirect:/books";
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Помилка при оновленні книги", e);
+            logger.log(Level.SEVERE, "Error updating book", e);
 
-            // У випадку помилки повертаємося на форму з повідомленням
+            // In case of error, return to form with message
             try {
                 Optional<Book> bookOpt = bookService.getBookById(id);
                 List<Author> authors = authorService.getAllAuthors();
@@ -267,40 +267,40 @@ public class BookWebController {
                 model.addAttribute("authors", authors != null ? authors : new ArrayList<>());
                 model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
             } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Помилка при отриманні даних для форми редагування", ex);
+                logger.log(Level.SEVERE, "Error getting data for edit form", ex);
             }
 
-            model.addAttribute("errorMessage", "Помилка при оновленні книги: " + e.getMessage());
+            model.addAttribute("errorMessage", "Error updating book: " + e.getMessage());
             return "book-edit";
         }
     }
 
-    // Видалення книги
+    // Delete book
     @PostMapping("/delete/{id}")
     public String deleteBook(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
-            logger.info("Видалення книги з ID: " + id);
+            logger.info("Deleting book with ID: " + id);
 
-            // Перевіряємо, чи існує книга
+            // Check if book exists
             Optional<Book> bookOpt = bookService.getBookById(id);
             if (bookOpt.isEmpty()) {
-                logger.warning("Книга з ID " + id + " не знайдена");
-                redirectAttributes.addFlashAttribute("errorMessage", "Книга з ID " + id + " не знайдена");
+                logger.warning("Book with ID " + id + " not found");
+                redirectAttributes.addFlashAttribute("errorMessage", "Book with ID " + id + " not found");
                 return "redirect:/books";
             }
 
             Book book = bookOpt.get();
             String bookTitle = book.getTitle();
 
-            // Видаляємо книгу
+            // Delete book
             bookService.deleteBook(id);
 
-            redirectAttributes.addFlashAttribute("successMessage", "Книгу \"" + bookTitle + "\" успішно видалено");
+            redirectAttributes.addFlashAttribute("successMessage", "Book \"" + bookTitle + "\" successfully deleted");
             return "redirect:/books";
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Помилка при видаленні книги", e);
-            redirectAttributes.addFlashAttribute("errorMessage", "Помилка при видаленні книги: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error deleting book", e);
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting book: " + e.getMessage());
             return "redirect:/books";
         }
     }

@@ -4,7 +4,7 @@
 @param String currentUser = null
 
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,35 +64,56 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark" style="background: rgba(0,0,0,0.1);">
-    <div class="container">
-        <a class="navbar-brand" href="/">
-            <i class="fas fa-book me-2"></i>
-            Library Management System
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Головна</a>
-
-                @if(currentUser != null)
-                    <span class="nav-link" style="color: white;"><i class="fas fa-user me-1"></i>Вітаємо, ${currentUser}!</span>
-                    <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt me-1"></i>Вихід</a>
-                @else
-                    <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i>Вхід</a>
-                    <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Реєстрація</a>
-                @endif
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(45deg, #667eea, #764ba2);">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-book-open me-2"></i>Library System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/books"><i class="fas fa-book me-1"></i>Books</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    @if(currentUser != null)
+                        <span class="navbar-text me-3">
+                            <i class="fas fa-user me-1"></i>${currentUser}
+                        </span>
+                        <form action="/logout" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </button>
+                        </form>
+                    @else
+                        <a href="/login" class="btn btn-outline-light btn-sm me-2">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <a href="/register" class="btn btn-light btn-sm">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    @endif
+                </div>
             </div>
         </div>
+    </nav>
+
+    <div class="main-container">
+        ${content}
     </div>
-</nav>
 
-<div class="main-container">
-    ${content}
-</div>
+    <footer class="text-center text-white py-3 mt-5" style="background: rgba(0, 0, 0, 0.2);">
+        <div class="container">
+            <p class="mb-0">© 2025 Library Management System</p>
+        </div>
+    </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 @import ua.edu.chnu.springjpaproject.model.Book
 @import java.util.List
 
-@param String title = "Список книг"
+@param String title = "Book List"
 @param String currentUser = null
 @param List<Book> books
 @param String successMessage = null
@@ -14,14 +14,14 @@ content = @`
     <div class="container mt-4">
         <div class="row mb-4">
             <div class="col">
-                <h1>Список книг бібліотеки</h1>
+                <h1>Library Book List</h1>
             </div>
             <div class="col-auto">
                 <a href="/books/add" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Додати нову книгу
+                    <i class="fas fa-plus"></i> Add New Book
                 </a>
                 <a href="/" class="btn btn-secondary">
-                    <i class="fas fa-home"></i> На головну
+                    <i class="fas fa-home"></i> Home
                 </a>
             </div>
         </div>
@@ -42,7 +42,7 @@ content = @`
 
         @if(books.isEmpty())
             <div class="alert alert-info">
-                Поки що немає жодної книги в базі даних. Додайте першу книгу!
+                No books in the database yet. Add your first book!
             </div>
         @else
             <div class="table-responsive">
@@ -50,13 +50,13 @@ content = @`
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
-                            <th>Назва</th>
-                            <th>Автор</th>
-                            <th>Категорія</th>
-                            <th>Рік</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Year</th>
                             <th>ISBN</th>
-                            <th>Сторінок</th>
-                            <th>Дії</th>
+                            <th>Pages</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,15 +95,15 @@ content = @`
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="/books/view/${book.getId()}" class="btn btn-info" title="Переглянути деталі">
+                                        <a href="/books/view/${book.getId()}" class="btn btn-info" title="View Details">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="/books/edit/${book.getId()}" class="btn btn-warning" title="Редагувати">
+                                        <a href="/books/edit/${book.getId()}" class="btn btn-warning" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form action="/books/delete/${book.getId()}" method="post" style="display:inline;"
-                                              onsubmit="return confirm('Ви впевнені, що хочете видалити книгу ${book.getTitle()}?')">
-                                            <button type="submit" class="btn btn-danger" title="Видалити">
+                                              onsubmit="return confirm('Are you sure you want to delete the book ${book.getTitle()}?')">
+                                            <button type="submit" class="btn btn-danger" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>

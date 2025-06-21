@@ -2,7 +2,7 @@
 @import ua.edu.chnu.springjpaproject.model.Category
 @import java.util.List
 
-@param String title = "Додати нову книгу"
+@param String title = "Add New Book"
 @param String currentUser = null
 @param String errorMessage = null
 @param List<Author> authors
@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Додати нову книгу</h1>
+        <h1>Add New Book</h1>
 
         @if(errorMessage != null)
             <div class="alert alert-danger">${errorMessage}</div>
@@ -25,7 +25,7 @@
 
         <form action="/books/add" method="post">
             <div class="mb-3">
-                <label for="title" class="form-label">Назва книги</label>
+                <label for="title" class="form-label">Book Title</label>
                 <input type="text" class="form-control" id="title" name="title" required>
             </div>
 
@@ -35,19 +35,19 @@
             </div>
 
             <div class="mb-3">
-                <label for="publicationYear" class="form-label">Рік публікації</label>
+                <label for="publicationYear" class="form-label">Publication Year</label>
                 <input type="number" class="form-control" id="publicationYear" name="publicationYear">
             </div>
 
             <div class="mb-3">
-                <label for="pages" class="form-label">Кількість сторінок</label>
+                <label for="pages" class="form-label">Number of Pages</label>
                 <input type="number" class="form-control" id="pages" name="pages">
             </div>
 
             <div class="mb-3">
-                <label for="author" class="form-label">Автор</label>
+                <label for="author" class="form-label">Author</label>
                 <select class="form-control" id="author" name="authorId" required>
-                    <option value="">Виберіть автора</option>
+                    <option value="">Select Author</option>
                     @for(Author author : authors)
                         <option value="${author.getId()}">${author.getFirstName()} ${author.getLastName()}</option>
                     @endfor
@@ -55,9 +55,9 @@
             </div>
 
             <div class="mb-3">
-                <label for="category" class="form-label">Категорія</label>
+                <label for="category" class="form-label">Category</label>
                 <select class="form-control" id="category" name="categoryId" required>
-                    <option value="">Виберіть категорію</option>
+                    <option value="">Select Category</option>
                     @for(Category category : categories)
                         <option value="${category.getId()}">${category.getName()}</option>
                     @endfor
@@ -65,11 +65,11 @@
             </div>
 
             <div class="mb-3">
-                <label for="description" class="form-label">Опис</label>
+                <label for="description" class="form-label">Description</label>
                 <textarea class="form-control" id="description" name="description"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary">Додати книгу</button>
+            <button type="submit" class="btn btn-primary">Add Book</button>
         </form>
     </div>
 </body>

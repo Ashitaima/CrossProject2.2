@@ -1,5 +1,5 @@
 @import ua.edu.chnu.springjpaproject.model.Book
-@param String title = "Деталі книги"
+@param String title = "Book Details"
 @param String currentUser = null
 @param Book book
 @param String errorMessage = null
@@ -11,14 +11,14 @@ content = @`
     <div class="container mt-4">
         <div class="row mb-4">
             <div class="col">
-                <h1>Деталі книги</h1>
+                <h1>Book Details</h1>
             </div>
             <div class="col-auto">
                 <a href="/books" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Повернутися до списку
+                    <i class="fas fa-arrow-left"></i> Back to List
                 </a>
                 <a href="/books/edit/${book.getId()}" class="btn btn-warning">
-                    <i class="fas fa-edit"></i> Редагувати
+                    <i class="fas fa-edit"></i> Edit
                 </a>
             </div>
         </div>
@@ -40,46 +40,46 @@ content = @`
                                 <td>${book.getId()}</td>
                             </tr>
                             <tr>
-                                <th>Автор:</th>
+                                <th>Author:</th>
                                 <td>
                                     @if(book.getAuthor() != null)
                                         ${book.getAuthor().getFirstName()} ${book.getAuthor().getLastName()}
                                     @else
-                                        Не вказано
+                                        Not specified
                                     @endif
                                 </td>
                             </tr>
                             <tr>
-                                <th>Категорія:</th>
+                                <th>Category:</th>
                                 <td>
                                     @if(book.getCategory() != null)
                                         ${book.getCategory().getName()}
                                     @else
-                                        Не вказано
+                                        Not specified
                                     @endif
                                 </td>
                             </tr>
                             <tr>
-                                <th>Рік публікації:</th>
+                                <th>Publication Year:</th>
                                 <td>
                                     @if(book.getPublicationYear() != null)
                                         ${book.getPublicationYear()}
                                     @else
-                                        Не вказано
+                                        Not specified
                                     @endif
                                 </td>
                             </tr>
                             <tr>
                                 <th>ISBN:</th>
-                                <td>${book.getIsbn() != null ? book.getIsbn() : "Не вказано"}</td>
+                                <td>${book.getIsbn() != null ? book.getIsbn() : "Not specified"}</td>
                             </tr>
                             <tr>
-                                <th>Кількість сторінок:</th>
+                                <th>Number of Pages:</th>
                                 <td>
                                     @if(book.getPages() != null)
                                         ${book.getPages()}
                                     @else
-                                        Не вказано
+                                        Not specified
                                     @endif
                                 </td>
                             </tr>
@@ -87,13 +87,13 @@ content = @`
                     </div>
                     <div class="col-md-4">
                         <div class="card mb-3">
-                            <div class="card-header">Інформація</div>
+                            <div class="card-header">Information</div>
                             <div class="card-body">
-                                <p><strong>Дата створення:</strong>
+                                <p><strong>Creation Date:</strong>
                                     @if(book.getCreatedAt() != null)
                                         ${book.getCreatedAt().toLocalDate().toString()}
                                     @else
-                                        Не вказано
+                                        Not specified
                                     @endif
                                 </p>
                             </div>
@@ -102,21 +102,21 @@ content = @`
                 </div>
 
                 <div class="card mt-3">
-                    <div class="card-header">Опис</div>
+                    <div class="card-header">Description</div>
                     <div class="card-body">
                         @if(book.getDescription() != null && !book.getDescription().isEmpty())
                             <p>${book.getDescription()}</p>
                         @else
-                            <p class="text-muted">Опис відсутній</p>
+                            <p class="text-muted">No description available</p>
                         @endif
                     </div>
                 </div>
             </div>
             <div class="card-footer">
                 <form action="/books/delete/${book.getId()}" method="post" style="display:inline;"
-                      onsubmit="return confirm('Ви впевнені, що хочете видалити цю книгу?')">
+                      onsubmit="return confirm('Are you sure you want to delete this book?')">
                     <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash"></i> Видалити книгу
+                        <i class="fas fa-trash"></i> Delete Book
                     </button>
                 </form>
             </div>
