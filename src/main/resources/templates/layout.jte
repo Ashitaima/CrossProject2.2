@@ -70,8 +70,8 @@
             Library Management System
         </a>
         <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Головна</a>
-            <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Реєстрація</a>
+            <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Main</a>
+            <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Registration</a>
         </div>
     </div>
 </nav>

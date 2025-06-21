@@ -1,4 +1,4 @@
-@param String title = "Головна сторінка"
+@param String title = "Main Page - Library Management System"
 
 @template.layout(
 title = title,
@@ -8,7 +8,6 @@ content = @`
             <div class="text-center mb-5">
                 <i class="fas fa-book fa-4x text-primary mb-3"></i>
                 <h1 class="card-title">Library Management System</h1>
-                <p class="lead text-muted">Система управління бібліотекою</p>
             </div>
 
             <div class="row g-4">
@@ -16,11 +15,11 @@ content = @`
                     <div class="card h-100 border-0" style="background: linear-gradient(45deg, #667eea, #764ba2); color: white;">
                         <div class="card-body text-center p-4">
                             <i class="fas fa-user-plus fa-3x mb-3"></i>
-                            <h5 class="card-title">Реєстрація</h5>
-                            <p class="card-text">Створіть новий обліковий запис для роботи з системою</p>
+                            <h5 class="card-title">Registration</h5>
+                            <p class="card-text">Create a new account for using LMS </p>
                             <a href="/register" class="btn btn-light btn-lg">
                                 <i class="fas fa-user-plus me-2"></i>
-                                Зареєструватися
+                                Register
                             </a>
                         </div>
                     </div>
@@ -30,11 +29,11 @@ content = @`
                     <div class="card h-100 border-0" style="background: linear-gradient(45deg, #764ba2, #667eea); color: white;">
                         <div class="card-body text-center p-4">
                             <i class="fas fa-books fa-3x mb-3"></i>
-                            <h5 class="card-title">Книги</h5>
-                            <p class="card-text">Переглядайте та керуйте колекцією книг бібліотеки</p>
+                            <h5 class="card-title">Book</h5>
+                            <p class="card-text">Browse and manage your library book collection</p>
                             <a href="/api/books" class="btn btn-light btn-lg">
                                 <i class="fas fa-book me-2"></i>
-                                API Книги
+                                Books API
                             </a>
                         </div>
                     </div>
@@ -50,7 +49,7 @@ content = @`
                                 Про систему
                             </h5>
                             <p class="card-text">
-                                Це навчальний проект системи управління бібліотекою, розроблений з використанням:
+                                This is a library management system training project developed using:
                             </p>
                             <div class="row">
                                 <div class="col-md-6">
