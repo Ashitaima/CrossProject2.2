@@ -1,5 +1,5 @@
 @param String title = "Головна сторінка"
-
+@param gg.jte.Content content
 @template.layout(
 title = title,
 content = @`

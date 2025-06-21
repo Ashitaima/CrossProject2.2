@@ -1,4 +1,4 @@
-package ua.edu.chnu.springjpaproject.user.controller;
+package ua.edu.chnu.springjpaproject.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +12,6 @@ import java.util.Map;
 @Controller
 public class UserViewController {
 
-    /**
-     * Відображення форми реєстрації
-     */
     @GetMapping("/register")
     public String showRegistrationForm(
             Model model,
@@ -40,14 +37,5 @@ public class UserViewController {
         }
 
         return "register";
-    }
-
-    /**
-     * Головна сторінка
-     */
-    @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("title", "Головна сторінка");
-        return "index";
     }
 }

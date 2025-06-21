@@ -1,4 +1,4 @@
-package ua.edu.chnu.springjpaproject.user.controller;
+package ua.edu.chnu.springjpaproject.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.edu.chnu.springjpaproject.user.User;
-import ua.edu.chnu.springjpaproject.user.UserService;
+import ua.edu.chnu.springjpaproject.service.UserService;
 import ua.edu.chnu.springjpaproject.user.dto.UserRegistrationDto;
 
 import java.util.HashMap;

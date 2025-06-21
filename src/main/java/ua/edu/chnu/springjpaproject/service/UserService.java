@@ -1,9 +1,12 @@
-package ua.edu.chnu.springjpaproject.user;
+package ua.edu.chnu.springjpaproject.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.edu.chnu.springjpaproject.repository.UserRepository;
+import ua.edu.chnu.springjpaproject.user.User;
+import ua.edu.chnu.springjpaproject.user.UserRole;
 import ua.edu.chnu.springjpaproject.user.dto.UserRegistrationDto;
 
 import java.util.List;
