@@ -3,15 +3,20 @@ package ua.edu.chnu.springjpaproject.config;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.output.WriterOutput;
+import gg.jte.resolve.DirectoryCodeResolver;
 import gg.jte.resolve.ResourceCodeResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Map;
 
@@ -26,13 +31,19 @@ public class JteConfiguration {
 
     @Bean
     public TemplateEngine templateEngine() {
-        if (developmentMode) {
-            // В режимі розробки використовуємо ClassPath resolver
+        try {
+            if (developmentMode) {
+                // В режимі розробки використовуємо DirectoryCodeResolver
+                Path templatePath = Paths.get(new ClassPathResource(templateLocation).getURI());
+                return TemplateEngine.create(new DirectoryCodeResolver(templatePath), ContentType.Html);
+            } else {
+                // В продакшн використовуємо прекомпільовані шаблони
+                return TemplateEngine.createPrecompiled(ContentType.Html);
+            }
+        } catch (Exception e) {
+            // У разі помилки використовуємо ResourceCodeResolver як запасний варіант
             ResourceCodeResolver codeResolver = new ResourceCodeResolver(templateLocation);
             return TemplateEngine.create(codeResolver, ContentType.Html);
-        } else {
-            // В продакшн використовуємо прекомпільовані шаблони
-            return TemplateEngine.createPrecompiled(ContentType.Html);
         }
     }
 

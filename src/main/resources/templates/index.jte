@@ -17,12 +17,18 @@ content = @`
                     <div class="card h-100 border-0" style="background: linear-gradient(45deg, #764ba2, #667eea); color: white;">
                         <div class="card-body text-center p-4">
                             <i class="fas fa-books fa-3x mb-3"></i>
-                            <h5 class="card-title">Book</h5>
-                            <p class="card-text">Browse and manage your library book collection</p>
-                            <a href="/api/books" class="btn btn-light btn-lg">
-                                <i class="fas fa-book me-2"></i>
-                                Books API
-                            </a>
+                            <h5 class="card-title">Управління книгами</h5>
+                            <p class="card-text">Перегляд та керування бібліотечною колекцією книг</p>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                <a href="/books" class="btn btn-light btn-lg">
+                                    <i class="fas fa-list me-2"></i>
+                                    Список книг
+                                </a>
+                                <a href="/books/add" class="btn btn-success btn-lg">
+                                    <i class="fas fa-plus me-2"></i>
+                                    Додати книгу
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
