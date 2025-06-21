@@ -3,11 +3,7 @@ package ua.edu.chnu.springjpaproject.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ua.edu.chnu.springjpaproject.user.User;
 import ua.edu.chnu.springjpaproject.service.UserService;
 import ua.edu.chnu.springjpaproject.user.dto.UserRegistrationDto;
@@ -16,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController  // Змінити на @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
 
@@ -28,57 +24,39 @@ public class UserRestController {
     }
 
     /**
-     * Реєстрація нового користувача (POST запит з форми)
+     * REST API для реєстрації користувача
      */
     @PostMapping("/register")
-    public String registerUser(
-            @Valid @ModelAttribute UserRegistrationDto registrationDto,
-            BindingResult bindingResult,
-            Model model,
-            RedirectAttributes redirectAttributes
-    ) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
         try {
-            // Збираємо помилки валідації
-            Map<String, String> errors = new HashMap<>();
-
-            if (bindingResult.hasErrors()) {
-                bindingResult.getFieldErrors().forEach(error ->
-                        errors.put(error.getField(), error.getDefaultMessage())
-                );
-            }
-
             // Перевірка унікальності username
             if (userService.existsByUsername(registrationDto.getUsername())) {
+                Map<String, String> errors = new HashMap<>();
                 errors.put("username", "Користувач з таким ім'ям вже існує");
+                return ResponseEntity.badRequest().body(errors);
             }
 
             // Перевірка співпадіння паролів
             if (!registrationDto.isPasswordsMatch()) {
+                Map<String, String> errors = new HashMap<>();
                 errors.put("confirmPassword", "Паролі не співпадають");
-            }
-
-            // Якщо є помилки, повертаємо форму з помилками
-            if (!errors.isEmpty()) {
-                model.addAttribute("user", registrationDto);
-                model.addAttribute("errors", errors);
-                return "register";
+                return ResponseEntity.badRequest().body(errors);
             }
 
             // Реєстрація користувача
             User savedUser = userService.registerUser(registrationDto);
 
-            // Перенаправлення з повідомленням про успіх
-            redirectAttributes.addAttribute("success", "true");
-            return "redirect:/register";
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Користувач успішно зареєстрований");
+            response.put("userId", savedUser.getId());
+
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            // Обробка помилок
             Map<String, String> errors = new HashMap<>();
             errors.put("general", "Помилка реєстрації: " + e.getMessage());
-
-            model.addAttribute("user", registrationDto);
-            model.addAttribute("errors", errors);
-            return "register";
+            return ResponseEntity.badRequest().body(errors);
         }
     }
 
@@ -86,7 +64,6 @@ public class UserRestController {
      * REST API для отримання всіх користувачів
      */
     @GetMapping
-    @ResponseBody
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
@@ -96,7 +73,6 @@ public class UserRestController {
      * REST API для перевірки доступності username
      */
     @GetMapping("/check-username")
-    @ResponseBody
     public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam String username) {
         boolean exists = userService.existsByUsername(username);
         Map<String, Boolean> response = new HashMap<>();
@@ -109,7 +85,6 @@ public class UserRestController {
      * REST API для отримання статистики користувачів
      */
     @GetMapping("/stats")
-    @ResponseBody
     public ResponseEntity<Map<String, Object>> getUserStats() {
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalUsers", userService.getUserCount());

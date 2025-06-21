@@ -1,3 +1,4 @@
+@import gg.jte.Content
 @param String title = "Library Management System"
 @param gg.jte.Content content
 

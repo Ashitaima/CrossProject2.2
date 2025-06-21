@@ -1,5 +1,5 @@
 @param String title = "Головна сторінка"
-@param gg.jte.Content content
+
 @template.layout(
 title = title,
 content = @`
@@ -32,9 +32,9 @@ content = @`
                             <i class="fas fa-books fa-3x mb-3"></i>
                             <h5 class="card-title">Книги</h5>
                             <p class="card-text">Переглядайте та керуйте колекцією книг бібліотеки</p>
-                            <a href="/books" class="btn btn-light btn-lg">
+                            <a href="/api/books" class="btn btn-light btn-lg">
                                 <i class="fas fa-book me-2"></i>
-                                Переглянути книги
+                                API Книги
                             </a>
                         </div>
                     </div>
@@ -66,6 +66,16 @@ content = @`
                                         <li><i class="fas fa-check text-success me-2"></i>Flyway Migrations</li>
                                         <li><i class="fas fa-check text-success me-2"></i>BCrypt Security</li>
                                     </ul>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h6>API Endpoints:</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a href="/api/books" class="btn btn-outline-primary btn-sm">📚 Books API</a>
+                                    <a href="/api/authors" class="btn btn-outline-success btn-sm">👤 Authors API</a>
+                                    <a href="/api/categories" class="btn btn-outline-warning btn-sm">📂 Categories API</a>
+                                    <a href="/index.html" class="btn btn-outline-info btn-sm">🧪 API Tester</a>
                                 </div>
                             </div>
                         </div>
