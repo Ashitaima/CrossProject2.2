@@ -1,113 +1,85 @@
 package ua.edu.chnu.springjpaproject.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ua.edu.chnu.springjpaproject.repository.UserRepository;
 import ua.edu.chnu.springjpaproject.user.User;
 import ua.edu.chnu.springjpaproject.user.UserRole;
 import ua.edu.chnu.springjpaproject.user.dto.UserRegistrationDto;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
-@Transactional
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private static final Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+    private UserRepository userRepository;
 
-    /**
-     * Реєстрація нового користувача
-     */
-    public User registerUser(UserRegistrationDto registrationDto) {
-        // Перевірка чи існує користувач з таким ім'ям
-        if (userRepository.existsByUsername(registrationDto.getUsername())) {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public User saveUser(User user) {
+        logger.info("Початок збереження користувача: " + user.getUsername());
+
+        // Check if username already exists
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            logger.warning("Користувач з ім'ям " + user.getUsername() + " вже існує");
             throw new RuntimeException("Користувач з таким ім'ям вже існує");
         }
 
-        // Перевірка чи співпадають паролі
-        if (!registrationDto.isPasswordsMatch()) {
-            throw new RuntimeException("Паролі не співпадають");
+        try {
+            User savedUser = userRepository.save(user);
+            logger.info("Користувач " + user.getUsername() + " успішно збережений з ID: " + savedUser.getId());
+            return savedUser;
+        } catch (Exception e) {
+            logger.severe("Помилка при збереженні користувача " + user.getUsername() + ": " + e.getMessage());
+            throw e;
         }
-
-        // Створення нового користувача
-        User user = new User();
-        user.setUsername(registrationDto.getUsername());
-        user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
-        user.setRole(UserRole.USER);
-
-        return userRepository.save(user);
     }
 
     /**
-     * Знайти користувача за ім'ям
+     * Перевіряє чи існує користувач з вказаним ім'ям
      */
-    @Transactional(readOnly = true)
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public boolean existsByUsername(String username) {
+        return userRepository.findByUsername(username).isPresent();
     }
 
     /**
-     * Отримати всіх користувачів
+     * Реєструє нового користувача з даних DTO
      */
-    @Transactional(readOnly = true)
+    public User registerUser(UserRegistrationDto registrationDto) {
+        User user = new User(
+                registrationDto.getUsername(),
+                passwordEncoder.encode(registrationDto.getPassword())
+        );
+        user.setRole(UserRole.USER); // За замовчуванням встановлюємо роль USER
+        return saveUser(user);
+    }
+
+    /**
+     * Повертає список всіх користувачів
+     */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     /**
-     * Отримати користувачів за роллю
+     * Повертає загальну кількість користувачів
      */
-    @Transactional(readOnly = true)
-    public List<User> getUsersByRole(UserRole role) {
-        return userRepository.findByRole(role);
-    }
-
-    /**
-     * Пошук користувачів за ім'ям
-     */
-    @Transactional(readOnly = true)
-    public List<User> searchUsers(String searchTerm) {
-        return userRepository.findByUsernameContainingIgnoreCase(searchTerm);
-    }
-
-    /**
-     * Перевірка чи існує користувач з таким ім'ям
-     */
-    @Transactional(readOnly = true)
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    /**
-     * Отримати кількість користувачів
-     */
-    @Transactional(readOnly = true)
     public long getUserCount() {
         return userRepository.count();
     }
 
     /**
-     * Отримати кількість користувачів за роллю
+     * Повертає кількість користувачів з вказаною роллю
      */
-    @Transactional(readOnly = true)
     public long getUserCountByRole(UserRole role) {
-        return userRepository.countByRole(role);
-    }
-
-    /**
-     * Перевірка паролю
-     */
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
+        return userRepository.findAll().stream()
+                .filter(user -> user.getRole() == role)
+                .count();
     }
 }
